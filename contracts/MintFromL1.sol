@@ -4,16 +4,25 @@ pragma solidity ^0.8.13;
 
 import "./Price.sol";
 
-// This is just a simple example of a coin-like contract.
-// It is not ERC20 compatible and cannot be expected to talk to other
-// coin/token contracts.
+interface Starknet {
+    function sendMessageToL2(
+        uint256 toAddress,
+        uint256 selector,
+        uint256[] calldata payload
+    ) external returns (bytes32);
+}
 
-contract MetaCoin {
-    // Payable address can receive Ether
+contract MintFromL1 {
+    address starknetContract;
     address payable public owner;
 
-    constructor(address ownerValue) {
-        owner = payable(ownerValue);
+    uint256 toAddress;
+    uint256 selector;
+
+    constructor(address _starknetContract, address _owner) {
+        // on goerli: 0xde29d060D45901Fb19ED6C6e959EB22d8626708e
+        starknetContract = _starknetContract;
+        owner = payable(_owner);
     }
 
     function deposit() public payable {}
@@ -28,10 +37,38 @@ contract MetaCoin {
         require(success, "Failed to send Ether");
     }
 
-	    // Function to transfer Ether from this contract to address from input
-    function purchase(uint domain, address payable _to, uint amount) public {
+    function setL2Data(uint256 _toAddress, uint256 _selector) public {
+        require(
+            msg.sender == owner,
+            "You don't have the right to call this function"
+        );
+        toAddress = _toAddress;
+        selector = _selector;
+    }
 
-		assert msg.value > Price.compute_price(domain);
+    // https://github.com/starkware-libs/cairo-lang/blob/4e233516f52477ad158bc81a86ec2760471c1b65/src/starkware/starknet/eth/StarknetMessaging.sol#L100
+    function purchase(
+        uint256 domain,
+        uint256 token_id,
+        uint256 duration_days,
+        uint256 resolver,
+        uint256 addr
+    ) public payable {
+        require(
+            msg.value >= Price.compute_price(domain, duration_days),
+            "You didn't pay enough"
+        );
 
+        uint256[] memory payload = new uint256[](5);
+        payload[0] = token_id;
+        payload[1] = domain;
+        payload[2] = duration_days;
+        payload[3] = resolver;
+        payload[4] = addr;
+        Starknet(starknetContract).sendMessageToL2(
+            toAddress,
+            selector,
+            payload
+        );
     }
 }
