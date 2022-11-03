@@ -14,6 +14,7 @@ interface Starknet {
 
 contract MintFromL1 {
     address starknetContract;
+    address pricingContract;
     address payable public owner;
 
     uint256 toAddress;
@@ -46,6 +47,14 @@ contract MintFromL1 {
         selector = _selector;
     }
 
+    function setPricingContract(address _pricingContract) public {
+        require(
+            msg.sender == owner,
+            "You don't have the right to call this function"
+        );
+        pricingContract = _pricingContract;
+    }
+
     // https://github.com/starkware-libs/cairo-lang/blob/4e233516f52477ad158bc81a86ec2760471c1b65/src/starkware/starknet/eth/StarknetMessaging.sol#L100
     function purchase(
         uint256 domain,
@@ -55,7 +64,7 @@ contract MintFromL1 {
         uint256 addr
     ) public payable {
         require(
-            msg.value >= Price.compute_price(domain, duration_days),
+            msg.value >= Price.compute_buy_price(domain, duration_days),
             "You didn't pay enough"
         );
 
