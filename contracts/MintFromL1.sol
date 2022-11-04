@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Tells the Solidity compiler to compile only from v0.8.13 to v0.9.0
 pragma solidity ^0.8.13;
-
 import "./Price.sol";
 
 interface Starknet {
@@ -23,11 +22,11 @@ contract MintFromL1 {
     constructor(address _starknetContract, address _owner) {
         // on goerli: 0xde29d060D45901Fb19ED6C6e959EB22d8626708e
         starknetContract = _starknetContract;
-        owner = payable(_owner);
+        owner = payable(_owner); 
     }
 
     function deposit() public payable {}
-
+ 
     function withdraw() public {
         // get the amount of Ether stored in this contract
         uint256 amount = address(this).balance;
@@ -45,14 +44,6 @@ contract MintFromL1 {
         );
         toAddress = _toAddress;
         selector = _selector;
-    }
-
-    function setPricingContract(address _pricingContract) public {
-        require(
-            msg.sender == owner,
-            "You don't have the right to call this function"
-        );
-        pricingContract = _pricingContract;
     }
 
     // https://github.com/starkware-libs/cairo-lang/blob/4e233516f52477ad158bc81a86ec2760471c1b65/src/starkware/starknet/eth/StarknetMessaging.sol#L100

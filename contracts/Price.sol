@@ -79,15 +79,4 @@ library Price {
 
         return (24657534246575);
     }
-
-    function getDivided(uint256 numerator, uint256 denominator)
-        private
-        pure
-        returns (uint256 quotient, uint256 remainder)
-    {
-        quotient = numerator / denominator;
-        remainder = numerator - denominator * quotient;
-
-        return (quotient, remainder);
-    }
 }
