@@ -6,10 +6,10 @@ pragma solidity ^0.8.13;
 library Price {
     uint256 constant simple_alphabet_size = 38;
     uint256 constant complex_alphabet_size = 2;
+    event Domain(uint256 domain);
 
     function compute_buy_price(uint256 domain, uint256 duration_days)
-        public
-        pure
+        external
         returns (uint256 price)
     {
 
@@ -21,22 +21,21 @@ library Price {
         return days_to_pay * price_per_day_eth;
     }
 
-
     function get_amount_of_chars(uint256 domain)
         private
-        pure
         returns (uint256 number_of_character)
     {
+
+        emit Domain(domain);
 
         if (domain == 0) {
             return 0;
         }
 
-         (uint256 quotient, uint256 remainder) = getDivided(domain, simple_alphabet_size);
+         uint256 remainder = domain % simple_alphabet_size;
 
         if (remainder == 37) {
-             (uint256 shifted_p, uint256 truc) = getDivided(remainder, complex_alphabet_size);
-            uint256 next = get_amount_of_chars(shifted_p);
+            uint256 next = get_amount_of_chars(remainder / complex_alphabet_size);
             return 1 + next;
         } else {
             uint256 next = get_amount_of_chars(remainder);

@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 // These files are dynamically created at test time
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
-import "../contracts/MintFromL1.sol";
+import "../contracts/MintFromL1.sol"; 
 
 contract TestMintFromL1 {
 
