@@ -6,39 +6,36 @@ pragma solidity ^0.8.13;
 library Price {
     uint256 constant simple_alphabet_size = 38;
     uint256 constant complex_alphabet_size = 2;
-    event Domain(uint256 domain);
 
     function compute_buy_price(uint256 domain, uint256 duration_days)
-        external
+        public
+        pure
         returns (uint256 price)
     {
-
         // // Calculate price depending on number of characters
         uint256 number_of_character = get_amount_of_chars(domain);
         uint256 price_per_day_eth = get_price_per_day(number_of_character);
         uint256 days_to_pay = get_days_to_pay(duration_days);
-        
+
         return days_to_pay * price_per_day_eth;
     }
 
     function get_amount_of_chars(uint256 domain)
         private
+        pure
         returns (uint256 number_of_character)
     {
-
-        emit Domain(domain);
-
         if (domain == 0) {
             return 0;
         }
 
-         uint256 remainder = domain % simple_alphabet_size;
-
+        uint256 remainder = domain % simple_alphabet_size;
+        uint256 divided = domain / simple_alphabet_size;
         if (remainder == 37) {
-            uint256 next = get_amount_of_chars(remainder / complex_alphabet_size);
+            uint256 next = get_amount_of_chars(divided / complex_alphabet_size);
             return 1 + next;
         } else {
-            uint256 next = get_amount_of_chars(remainder);
+            uint256 next = get_amount_of_chars(divided);
             return 1 + next;
         }
     }
@@ -48,12 +45,11 @@ library Price {
         pure
         returns (uint256 days_to_pay)
     {
-
-        if (1824  < duration_days) {
+        if (1824 < duration_days) {
             return (duration_days - 730);
         }
 
-        if (1094  < duration_days) {
+        if (1094 < duration_days) {
             return (duration_days - 365);
         }
 
@@ -82,14 +78,16 @@ library Price {
         }
 
         return (24657534246575);
-
     }
 
-    function getDivided(uint numerator, uint denominator) private pure returns(uint quotient, uint remainder) {
-        quotient  = numerator / denominator;
+    function getDivided(uint256 numerator, uint256 denominator)
+        private
+        pure
+        returns (uint256 quotient, uint256 remainder)
+    {
+        quotient = numerator / denominator;
         remainder = numerator - denominator * quotient;
 
         return (quotient, remainder);
     }
-
 }
