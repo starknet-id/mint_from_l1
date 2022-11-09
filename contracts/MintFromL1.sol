@@ -25,8 +25,6 @@ contract MintFromL1 {
         owner = payable(_owner); 
     }
 
-    function deposit() public payable {}
- 
     function withdraw() public {
         // get the amount of Ether stored in this contract
         uint256 amount = address(this).balance;

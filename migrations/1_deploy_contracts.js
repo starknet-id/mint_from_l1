@@ -6,7 +6,7 @@ module.exports = function (deployer) {
   deployer.link(Price, MintFromL1);
   deployer.deploy(
     MintFromL1,
-    "0x89a8055e0ae90f003cb2d79d7ca92a001cb17b38",
-    "0xd4a9c882a3bca196d9fe70ff9f433392347feaa1"
+    "0xde29d060D45901Fb19ED6C6e959EB22d8626708e",
+    "0x5bb21b30e912871d27182e7b7f9c37c888269cb2"
   );
 };
