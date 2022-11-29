@@ -5,6 +5,6 @@
     "truffle": "^5.6.4"
   },
   "devDependencies": {
-    "truffle-plugin-verify": "^0.5.32"
+    "truffle-plugin-verify": "^0.5.33"
   }
 }

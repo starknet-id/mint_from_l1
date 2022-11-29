@@ -21,7 +21,6 @@
 // require('dotenv').config();
 // const mnemonic = process.env["MNEMONIC"];
 // const infuraProjectId = process.env["INFURA_PROJECT_ID"];
- 
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
@@ -34,6 +33,12 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
+
+  plugins: ['truffle-plugin-verify'],
+
+  api_keys: {
+    etherscan: '7XD7EYDP5MRWXRGTYBK3HACAZKNYFHD4BF'
+  },
 
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default
@@ -53,6 +58,12 @@ module.exports = {
     //   network_id: 5,       // Goerli's id
     //   chain_id: 5
     // }
+
+    mainnet: {
+      host: "https://mainnet.infura.io/v3/YOUR_KEY_HERE",
+      network_id: 1,
+    },
+
   },
 
   // Set default mocha options here, use special reporters etc.
@@ -65,5 +76,6 @@ module.exports = {
     solc: {
       version: "0.8.13",      // Fetch exact version from solc-bin
     }
-  }
+  },
+
 };
